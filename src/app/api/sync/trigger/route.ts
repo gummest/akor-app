@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { runDailySync, runWeeklySync } from "../../../../../lib/sync";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,8 +8,10 @@ export async function POST(req: NextRequest) {
     let result: { found: number; added: number };
 
     if (type === "weekly") {
+      const { runWeeklySync } = await import("../../../../../lib/sync");
       result = await runWeeklySync();
     } else {
+      const { runDailySync } = await import("../../../../../lib/sync");
       result = await runDailySync();
     }
 

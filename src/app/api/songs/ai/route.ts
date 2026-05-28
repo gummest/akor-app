@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateChordsForSong } from "../../../../../lib/ai";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,6 +11,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    const { generateChordsForSong } = await import("../../../../../lib/ai");
 
     const result = await generateChordsForSong(artistName, songTitle);
 

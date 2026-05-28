@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  imageUrl  String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  songs     Song[]
+}
+
+model Song {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  artistId    String
+  artist      Artist   @relation(fields: [artistId], references: [id])
+  genre       String?
+  releaseYear Int?
+  difficulty  String   @default("orta")
+  viewCount   Int      @default(0)
+  isPopular   Boolean  @default(false)
+  isNew       Boolean  @default(false)
+  aiGenerated Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  chords      Chord[]
+  categories  SongCategory[]
+
+  @@unique([artistId, title])
+  @@index([genre])
+  @@index([isPopular])
+  @@index([isNew])
+  @@index([viewCount])
+}
+
+model Chord {
+  id          String   @id @default(cuid())
+  songId      String
+  song        Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  content     String
+  capo        Int      @default(0)
+  tuning      String   @default("standart")
+  submittedBy String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([songId])
+}
+
+model Category {
+  id    String          @id @default(cuid())
+  name  String          @unique
+  slug  String          @unique
+  songs SongCategory[]
+}
+
+model SongCategory {
+  songId     String
+  categoryId String
+  song       Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([songId, categoryId])
+}
+
+model SyncLog {
+  id          String    @id @default(cuid())
+  type        String
+  status      String    @default("pending")
+  songsFound  Int       @default(0)
+  songsAdded  Int       @default(0)
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}

@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:daily": "node -e \"fetch('http://localhost:3000/api/sync/trigger', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type:'daily'})}).then(r=>r.json()).then(console.log)\"",
+    "sync:weekly": "node -e \"fetch('http://localhost:3000/api/sync/trigger', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type:'weekly'})}).then(r=>r.json()).then(console.log)\""
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.3.0",

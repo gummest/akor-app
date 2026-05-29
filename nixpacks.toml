@@ -1,0 +1,2 @@
+[providers.node]
+pkgs = ["nodejs_22", "npm-9_x", "openssl"]

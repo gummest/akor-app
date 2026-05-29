@@ -1,2 +1,5 @@
-[providers.node]
-pkgs = ["nodejs_22", "npm-9_x", "openssl"]
+[phases.setup]
+nixPkgs = ["nodejs_22", "npm-9_x", "openssl"]
+
+[start]
+cmd = "node_modules/.bin/next start -p ${PORT:-3000}"
